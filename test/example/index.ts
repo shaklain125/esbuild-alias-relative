@@ -1,3 +1,3 @@
-import { B } from "@test/example/b";
+import { B } from "@app/b";
 
 console.log(B);
