@@ -62,43 +62,12 @@ const alias_relative_matcher = async (matcherOpts: MatcherOpts) => {
         });
     };
 
-    const file_outpath = (() => {
-        const cwd = fslash(path.resolve(process.cwd()));
-        const exclude_cwd = fslash(file_path).replace(cwd, "");
-        const root = exclude_cwd.split("/").find(e => !!e);
-        let full_root_path = root ? fslash(path.resolve(root)) : "";
-        if (root) {
-            full_root_path = fs.statSync(full_root_path).isFile()
-                ? fslash(path.resolve(path.dirname(root)))
-                : full_root_path;
-        }
-        const root_path = fslash(full_root_path?.replace(cwd, ""));
-        const exclude_root = exclude_cwd.replace(root_path, "");
-        return {
-            file_path: fslash(path.resolve(path.join(outdir, exclude_root))),
-            root_path,
-            full_root_path,
-        };
-    })();
-
     let fname_logged = false;
 
     alias_entries.forEach(([alias, alias_path]) => {
         alias_path = path.resolve(alias_path);
 
         const alias_rgx = new RegExp(`^${alias}`);
-
-        const root_sub_path = (() => {
-            const alias_path_fslash = fslash(alias_path);
-            const has_root = (root: string) => (p: string) =>
-                !!root && !!p ? new RegExp(root).test(p) : false;
-            let root_s = "";
-            const f_root = file_outpath.full_root_path;
-            if (has_root(f_root)(alias_path_fslash)) {
-                root_s = alias_path_fslash.replace(f_root, "");
-            }
-            return path.join(outdir, root_s);
-        })();
 
         replaceFromPath(from_path => {
             if (!from_path || !alias_rgx.test(from_path)) return undefined;
@@ -109,8 +78,8 @@ const alias_relative_matcher = async (matcherOpts: MatcherOpts) => {
             }
 
             const subpath = from_path.replace(alias_rgx, "");
-            const n_subpath = fslash(path.join(root_sub_path, subpath));
-            const f_o_path_dirname = path.dirname(file_outpath.file_path);
+            const n_subpath = fslash(path.join(alias_path, subpath));
+            const f_o_path_dirname = path.dirname(file_path);
 
             let n_p = fslash(path.relative(f_o_path_dirname, n_subpath));
             if (!/^\./.test(n_p)) n_p = `./${n_p}`;
