@@ -1,0 +1,35 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "node": true
+    },
+    "extends": ["eslint:recommended", "prettier"],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["json", "prettier", "@typescript-eslint"],
+    "rules": {
+        "prettier/prettier": "error",
+        "linebreak-style": ["error", "windows"],
+        "quotes": ["error", "double", { "avoidEscape": true, "allowTemplateLiterals": true }],
+        "semi": ["error", "always"],
+        "one-var": ["error", "never"],
+        "no-unused-vars": "warn",
+        "prefer-const": "warn",
+        "arrow-parens": ["error", "as-needed"],
+        "arrow-spacing": "error",
+        "arrow-body-style": "off",
+        "prefer-arrow-callback": "off",
+        "no-async-promise-executor": "off",
+        "no-empty": "warn"
+    },
+    "globals": {
+        "NodeJS": false
+    }
+}

@@ -1,0 +1,26 @@
+{
+	// General
+	"Enum with same symbolic name": {
+		"prefix": "enn",
+		"body": ["${1:symbol} = \"${1:symbol}\",\n$0"],
+		"description": "Create enum symbolic name with the name itself as a string",
+		"scope": "typescript"
+	},
+	"Class creation with filename as the classname": {
+		"prefix": "tscls",
+		"body": [
+			"class $TM_FILENAME_BASE {",
+			"\tconstructor() {\n\t\t$0\n\t}",
+			"}",
+			"\nexport { $TM_FILENAME_BASE };"
+		],
+		"description": "Creates a new class with the name of the file",
+		"scope": "typescript"
+	},
+	"Export all from a file in current directory": {
+		"prefix": "exa",
+		"body": ["export * from \"./$0\""],
+		"description": "Creates an export statement to export all from a file in current directory",
+		"scope": "typescript"
+	}
+}
