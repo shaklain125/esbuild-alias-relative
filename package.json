@@ -1,12 +1,21 @@
 {
     "name": "esbuild-alias-relative",
-    "version": "1.0.2",
+    "version": "1.0.4",
     "description": "A plugin to convert alias paths to relative paths",
-    "main": "./dist/index.js",
-    "files": [
-        "dist"
-    ],
+    "main": "index.js",
+    "filesGlob": {
+        "include": [
+            "*"
+        ],
+        "exclude": [
+            "*.json",
+            ".*"
+        ]
+    },
     "scripts": {
+        "build": "npm run tsc",
+        "dryrun": "npm run deploy -- --dry-run",
+        "deploy": "node scripts/expand-files.js npm.cmd publish",
         "_________________________________________________________TypeScript tsc": "",
         "tsc": "npm run clean && tsc",
         "tsc:w": "npm run clean && tsc -w",
