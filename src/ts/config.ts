@@ -20,6 +20,16 @@ const getTSConfig = (conf_file = "tsconfig.json") => {
 
 export type TsConfigOpts = ReturnType<typeof getTSConfig>;
 
+const getExtendedTSConfig = (config: Partial<TsConfigOpts>) => {
+    const tsc = config.json ?? {};
+    if (!("extends" in tsc) || !config.path) return tsc;
+    const extLoc = path.resolve(path.dirname(config.path), tsc.extends);
+    const extended = getTSConfig(extLoc).json;
+    const hasComp = "compilerOptions" in extended && "compilerOptions" in tsc;
+    if (hasComp) tsc.compilerOptions = { ...extended.compilerOptions, ...tsc.compilerOptions };
+    return tsc;
+};
+
 const get_path_aliases = (tsc: TsConfigOpts) => tsc.config.options.paths;
 
 const parse_path_aliases = (copts: ts.CompilerOptions) => {
@@ -38,4 +48,10 @@ const parse_path_aliases = (copts: ts.CompilerOptions) => {
 const get_filenames_from_config_json = (config: Record<string, any>, basePath = process.cwd()) =>
     ts.parseJsonConfigFileContent(config, ts.sys, basePath).fileNames;
 
-export { getTSConfig, parse_path_aliases, get_path_aliases, get_filenames_from_config_json };
+export {
+    getTSConfig,
+    getExtendedTSConfig,
+    parse_path_aliases,
+    get_path_aliases,
+    get_filenames_from_config_json,
+};

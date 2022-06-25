@@ -1,9 +1,7 @@
 import chalk from "chalk";
-import fs from "fs";
-import path from "path";
 import ts from "typescript";
 import { timer } from "../utils/timer";
-import { getTSConfig, TsConfigOpts } from "./config";
+import { getExtendedTSConfig, getTSConfig, TsConfigOpts } from "./config";
 
 type TscOpts = Partial<TsConfigOpts>;
 
@@ -13,20 +11,9 @@ export type GenOpts = {
     extendCompilerOptions?: ts.CompilerOptions;
 };
 
-export const get_extended_tsc = (config: TscOpts) => {
-    const tsc = config.json ?? {};
-    if (!("extends" in tsc) || !config.path) return tsc;
-    const extLoc = path.resolve(path.dirname(config.path), tsc.extends);
-    const extFile = fs.readFileSync(extLoc, "utf-8");
-    const extended = JSON.parse(extFile || "{}") || {};
-    const hasComp = "compilerOptions" in extended && "compilerOptions" in tsc;
-    if (hasComp) tsc.compilerOptions = { ...extended.compilerOptions, ...tsc.compilerOptions };
-    return tsc;
-};
-
 export const get_dts_copts = (config?: TscOpts, outdir?: string): ts.CompilerOptions => {
     if (!config) throw new Error("tsconfig file not found");
-    const tsc = get_extended_tsc(config);
+    const tsc = getExtendedTSConfig(config);
     const ts_copts = config.dirname
         ? ts.convertCompilerOptionsFromJson(tsc.compilerOptions, config.dirname).options
         : {};
